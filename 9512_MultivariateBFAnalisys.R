@@ -117,7 +117,9 @@ dPlot
 #    later used for multivariate analyses
 
 ###Relative abundaces % 
-ab1 <- ab1[rowSums(ab1[])>0,]                               #Deletes 0 rows
+ab1 <- read.csv("9512Gr2.CSV", check.names = F)
+ab1 <- replace(ab1,is.na(ab1),0)
+ab1 <- ab1[rowSums(ab1[,2:82])>0,]                          #Deletes 0 rows
 ab1P <- data.frame(ab1/rowSums(ab1)*100, check.names = F)   #Calculates %
 rowSums(ab1P)                                               #Checks calculus went ok
 
@@ -128,7 +130,7 @@ crit2 <- c(ifelse(crit >= 1, 101,0))                        #Criteria to filter 
 ab1Pcr <- rbind(ab1P, crit2)                                #merge criteria with df
 ab1PF <- select_if(ab1Pcr, (crit2==101))                    #Filter df
 ab1PF <- ab1PF[-c(101), ]                                   #erase criteria
-write.csv(ab1PF , file= "MatrizFiltrada%_5.csv")            #saves the resulting matrix
+# write.csv(ab1PF , file= "MatrizFiltrada%_5.csv")            #saves the resulting matrix
 rowSums(ab1PF)                                              #Checks calculus went ok
 
 ###################################
