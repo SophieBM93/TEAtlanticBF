@@ -45,10 +45,10 @@ library("expss")
 
 # 2) Set Directory
 getwd()
-setwd("C:/Users/Sofia Barragan Monti/Documents/009_PhD/Cores/9512/BarraganMontilla/RDiv")
+setwd("C:/Users/Sofia Barragan Monti/Documents/PhDBFMultivariate/TEAtlanticBF")
 
 # 3) Import Data for Diversity Calculations
-ab1 <- read.csv("C:/Users/Sofia Barragan Monti/Documents/009_PhD/Cores/9512/BarraganMontilla/RDiv/9512Sp.csv", 
+ab1 <- read.csv("9512Sp.csv", 
                 header = TRUE, row.names = 1, check.names = F)                     #Import data
 ab1 <- replace(ab1,is.na(ab1),0)                                                   #Replacing NA values by 0
 ab1<- ab1[rowSums(ab1[,2:148])>0,]                                                 #Delete 0 rows
@@ -78,7 +78,7 @@ colnames(Div)<- c("Age (ka)", "Richness", "Shannon Index", "Fisher Alpha Index")
 Div$`Age (ka)` <- as.numeric(Div$`Age (ka)`) #Make varibles numeric
 Div$`Richness` <- as.numeric(Div$`Richness`) #Make varibles numeric
 str(Div)                                     #Check types of variables
-write.csv(Div, file= "Diversity.csv")        #Saves calculations as csv
+# write.csv(Div, file= "Diversity.csv")        #Saves calculations as csv
 
 #Diveristy plots
 dPlot <- ggplot(Div, aes(`Fisher Alpha Index`, `Age (ka)`))+
