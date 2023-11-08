@@ -1,24 +1,27 @@
-This folder contains 2 codes
+This folder contains 2 codes, as supplement to the publication xxxx:
 
-1. 9512_MultivariateBFAnalisys.R
-To run and visualize the NMDS of benthic foraminifera from the las deglaciation identified on site GeoB9512-5
+-Folder 9512Diversity_NMDS
+
+1. Code 9512_MultivariateBFAnalisys.R
+To run and visualize the NMDS of benthic foraminifera from the last deglaciation identified onsite GeoB9512-5
 
 9512Sp data comes from Barragán-Montilla, S. (dataset in review b). Benthic Foraminifera counts off NW Africa during the last deglaciation. PANGAEA, https://doi.pangaea.de/10.1594/PANGAEA.962951
 
-9512Gr2 as reported in the Supplementary Information
-9512EA adapted for this code using the Supplementary Information 3 y 4
+9512Gr2.csv as reported in the Supplementary Information
+9512EA.csv adapted for this code using the Supplementary Information 3 y 4
 
+-Folder 9512Age_Proxies
 
-2. In the Folder "AgeModellin_PaleocenographyProxies", the code 9512AgeModel.R was adapted in 2 parts.
-First Part: lines 9 - 290 to model ages based on the radiocarbon data published here https://doi.org/10.1594/PANGAEA.962899 ,
+2. Code 9512AgeModel.R was written in 3 parts.
+
+First Part: lines 9 - 290 to model ages based on the radiocarbon data published here https://doi.org/10.1594/PANGAEA.962899 
 and estimate median ages of the benthic foraminifera geochemistry data points reported here https://doi.org/10.1594/PANGAEA.962968 
-
-9512_EA adapted for this code using the Supplementary Information 3 y 4
+with the corresponding uncertainties calculated for this study
 
 Second part: from lines 291 - 965, to visualize the results presented in the publication
+9512_EA.csv file adapted for this code using Supplementary Information 3 y 4
 
-A third optional (lines 968 - 1,115 ) part includes global variables compiled by different authors, including:
-
+A third optional (lines 968 - 1,115 ) part that includes global variables compiled by different authors, including:
 
 ## Atlantic Ph/Th Line 964 https://www.nature.com/articles/nature02494 and https://www.nature.com/articles/nature14059
 ## Global CO2 https://doi.pangaea.de/10.1594/PANGAEA.871265 line 1047
