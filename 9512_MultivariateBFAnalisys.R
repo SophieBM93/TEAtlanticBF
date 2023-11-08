@@ -2,8 +2,8 @@
 # Downcore Benthic Foraminifera quantitative analyses    #
 # for site GeoB9512-5                                    #
 # Sofia Barragan-Montilla                                #
-# Last modified: 11-1-2023                               # 
-# Runned: 11-1-2023                                      # 
+# Last modified: 11-8-2023                               # 
+# Runned: 11-8-2023                                      # 
 # For RStudio 2023.06.1 Build 524                        #
 ##########################################################
 
@@ -48,23 +48,21 @@ getwd()
 setwd("C:/Users/Sofia Barragan Monti/Documents/PhDBFMultivariate/TEAtlanticBF")
 
 # 3) Import Data for Diversity Calculations
-ab1 <- read.csv("9512Sp.csv", 
-                header = TRUE, row.names = 1, check.names = F)                     #Import data
+ab1 <- read.csv("9512Sp.csv", header = TRUE, check.names = F, row.names = 1)       #Import data
 ab1 <- replace(ab1,is.na(ab1),0)                                                   #Replacing NA values by 0
 ab1<- ab1[rowSums(ab1[,2:148])>0,]                                                 #Delete 0 rows
 ab1 <- ab1[,2:148]
+
 ######################
-##Intervals (from Age Model)
+# 4) Defines Key Climatic Periods (As reported in the Manuscript)
+
 YD <- tibble(ymin = 14.7, ymax =13.2, xmin = -Inf, xmax = Inf)
-# HS1A <- tibble(ymin = 17.9, ymax =15.7, xmin = -Inf, xmax = Inf)
-# HS1B <- tibble(ymin = 15.7, ymax =14.7, xmin = -Inf, xmax = Inf)
-HS1 <- tibble(ymin = 18.15, ymax =15.79, xmin = -Inf, xmax = Inf)
-HS2 <- tibble(ymin = 26.02, ymax =23.8, xmin = -Inf, xmax = Inf)
-LGM <- tibble(ymin = 25.84, ymax =24.29, xmin = -Inf, xmax = Inf)
-# CRobert<- tibble(ymin = 11.739, ymax =15.307, xmin = -Inf, xmax = Inf)
+HS1 <- tibble(ymin = 18.2, ymax =15.8, xmin = -Inf, xmax = Inf)
+HS2 <- tibble(ymin = 25.84, ymax =24.29, xmin = -Inf, xmax = Inf)
+LGM <- tibble(ymin = 23, ymax =19, xmin = -Inf, xmax = Inf)
 
 ##################### 
-### 4) Diversity Analyses Vegan Package
+### 5) Calculates Diversity - Vegan Package
 
 s <- specnumber(ab1[,])                  #Calculates simple Sp. Richness
 H <- diversity(ab1[,], 
@@ -82,34 +80,36 @@ str(Div)                                     #Check types of variables
 
 #Diveristy plots
 dPlot <- ggplot(Div, aes(`Fisher Alpha Index`, `Age (ka)`))+
-  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax), 
+  geom_hline(yintercept = 6.6, linetype = 2, linewidth = 0.5, alpha=0.5)+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
             data = LGM, alpha = 0.6, fill = "#c7c7c7", inherit.aes = FALSE)+
-  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax), 
-            data = HS1, alpha = 0.6, fill = "#c7c7c7",inherit.aes = FALSE)+
-  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax), 
-            data = HS2, alpha = 0.9, fill = "#c7c7c7",inherit.aes = FALSE)+
-  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax), 
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = HS1, alpha = 0.4, fill = "#A6B578",inherit.aes = FALSE)+
+  geom_hline(yintercept = 16.79, linetype=2, linewidth=0.5, alpha=0.5)+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = HS2, alpha = 0.4, fill = "#A6B578",inherit.aes = FALSE)+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
             data = YD, alpha = 0.6, fill = "#c7c7c7", inherit.aes = FALSE)+
   geom_lineh()+
-  geom_lineh(aes(`Shannon Index`, `Age (ka)`), colour="#CC6666")+
   scale_y_reverse(guide="prism_minor",
                   breaks = seq(50,0,by=-5),
                   limits = c(27,0),
                   expand = c(0,0),
                   minor_breaks=seq(50, 0, -1))+
   scale_x_continuous(guide="prism_minor",
-                  breaks = seq(0,20,by=5),
-                  limits = c(0,20),
-                  expand = c(0,0),
-                  minor_breaks=seq(0,20, 1))+
+                     breaks = seq(0,20,by=5),
+                     limits = c(5,20),
+                     expand = c(0,0),
+                     minor_breaks=seq(0,20, 1))+
   labs(title = "Benthic Foraminifera Diversity (Fisher Alpha")+
   ylab ("") +
   xlab ("") +
   scale_color_continuous(type = "viridis")+ 
-  theme_minimal_vgrid()+
-  theme(axis.ticks.y = element_blank(), 
-        axis.line.y = element_blank(),
-        axis.text.y = element_blank())
+  theme_classic()+
+  theme(axis.line.x = element_line(linetype = 1, size = 0.5),
+        axis.ticks.x = element_line(linetype = 1, size = 0.5),
+        plot.title = element_text(size = 11, family = "sans", hjust = 0.5, face="bold"),
+        axis.text = element_text(size = 10, family = "sans"))
 dPlot
 
 ######################
@@ -125,9 +125,9 @@ ab1 <- ab1[rowSums(ab1[,2:81])>0,]                          #Deletes 0 rows
 ab1P <- data.frame(ab1/rowSums(ab1)*100, check.names = F)   #Calculates %
 rowSums(ab1P)                                               #Checks calculus went ok
 
-### Filter species >2% in all samples
+### Filter species >5% in all samples
 ab1P <- na.omit(ab1P)                                       #erases empty rows
-crit <- c(count_col_if(gt(5), ab1P))                        #Criteria to filter (>2%)
+crit <- c(count_col_if(gt(5), ab1P))                        #Criteria to filter (>5%)
 crit2 <- c(ifelse(crit >= 1, 101,0))                        #Criteria to filter (in more than 1 sample)
 ab1Pcr <- rbind(ab1P, crit2)                                #merge criteria with df
 ab1PF <- select_if(ab1Pcr, (crit2==101))                    #Filter df
@@ -137,20 +137,65 @@ rowSums(ab1PF)                                              #Checks calculus wen
 
 ###################################
 # 6) Plot relative abundances of most important species 
-r.df <- ab1PF
-ydepth <- as.numeric(row.names(r.df))
-Zones2 <- c(0, 11.7, 12.9, 14.6, 15.47, 18.36, 19, 23, 23.8, 26.02)
 
-Stratiplot(r.df, ydepth,type = "poly", sort = "wa", rev=T, 
-           varTypes="relative", zones = Zones2, 
-           yticks = c(0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30),
-           colour="black")
+r.df <- ab1PF
+
+ea1_b <- cbind(row.names(r.df), r.df[])
+
+melted <- melt(ea1_b, id.vars = "row.names(r.df)")
+str(melted)
+names(melted)[1] <- "Age"
+melted$Age <- as.numeric(melted$Age)
+
+AbundSp <- ggplot(melted, aes(x=value,y= Age, fill=variable))+
+  geom_hline(yintercept = 6.6, linetype = 2, linewidth = 0.5, alpha=0.7, colour="darkgreen")+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = LGM, alpha = 0.6, fill = "#c7c7c7", inherit.aes = FALSE)+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = HS1, alpha = 0.4, fill = "#A6B578",inherit.aes = FALSE)+
+  geom_hline(yintercept = 16.79, linetype=2, linewidth=0.5, alpha=0)+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = HS2, alpha = 0.4, fill = "#A6B578",inherit.aes = FALSE)+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = YD, alpha = 0.6, fill = "#c7c7c7", inherit.aes = FALSE)+
+  geom_hline(yintercept = 7.12, linetype = 2, linewidth = 0.5, alpha=0.5)+
+  geom_hline(yintercept = 15.71, linetype = 2, linewidth = 0.5, alpha=0.5)+
+  geom_hline(yintercept = 16.18, linetype = 2, linewidth = 0.5, alpha=0.5)+
+  geom_hline(yintercept = 23.76, linetype = 1, linewidth = 0.5, alpha=0.5)+
+  geom_hline(yintercept = 18.28, linetype = 1, linewidth = 0.5, alpha=0.5)+
+  geom_hline(yintercept = 17.64, linetype = 1, linewidth = 0.5, alpha=0.5)+
+  geom_hline(yintercept = 14.19, linetype = 1, linewidth = 0.5, alpha=0.5)+
+  geom_hline(yintercept = 12.97, linetype = 1, linewidth = 0.5, alpha=0.5)+
+  geom_hline(yintercept = 11.62, linetype = 1, linewidth = 0.5, alpha=0.5)+
+  geom_hline(yintercept = 10.98, linetype = 1, linewidth = 0.5, alpha=0.5)+
+  geom_areah()+
+  scale_y_reverse(guide="prism_minor",
+                  breaks = seq(50,0,by=-5),
+                  limits = c(27,0),
+                  expand = c(0,0),
+                  minor_breaks=seq(50, 0, -1))+
+  scale_x_continuous(guide="prism_minor",
+                     breaks = seq(0,100,by=20),
+                     limits = c(0,75),
+                     expand = c(0,0),
+                     minor_breaks=seq(0,100, 10))+
+  scale_fill_manual(values = c("black","black","black","black", "black","black", 
+                               "grey","grey", "black","grey","black", "#FFBABA",
+                               "black","black","black","black","grey", "black",
+                               "grey","#FFBABA", "#FFBABA", "#FFBABA", "#AFCAE6", "gray", 
+                               "black","black","black"))+
+  theme_classic()+
+  theme(legend.position = "none",
+        axis.line = element_line(linetype = 1, size = 0.5),
+        axis.ticks = element_line(linetype = 1, size = 0.5),
+        plot.title = element_text(size = 11, family = "sans", hjust = 0.5, face="bold"),
+        axis.text = element_text(size = 10, family = "sans"))+
+  facet_wrap(~ variable, nrow=1)
+AbundSp 
+
 #Saves plot
-pdf(file = "GeoB9512-5 BFAbund2.pdf", paper = "a4r", bg="transparent", height = 5, width = 30)
-Stratiplot(r.df, ydepth,type = "poly", sort = "wa", rev=T, 
-           varTypes="relative", zones = Zones2, 
-           yticks = c(0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30),
-           colour="black")
+pdf(file = "GeoB9512-5_BFAbund.pdf", paper = "a4r", bg="transparent", height = 5, width = 30)
+AbundSp 
 dev.off()
 
 #####################
@@ -166,8 +211,8 @@ stressplot(nmds)                                              #check Stress Plot
 
 # Import Environmental Data
 env.9512 <- read.csv("9512EA.csv", check.names = F)
-env.9512 <- replace(env.9512,is.na(env.9512),0)                                                  #Replacing NA values by 0
-env.9512<- env.9512[rowSums(env.9512[,4:5])>0,]                                                 #Delete 0 rows
+env.9512 <- replace(env.9512,is.na(env.9512),0)                         #Replacing NA values by 0
+env.9512<- env.9512[rowSums(env.9512[,4:5])>0,]                         #Delete 0 rows
 
 # Plot the NMDS 
 fort <- fortify(nmds)
@@ -197,7 +242,10 @@ q1 <- ggplot()+
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
         legend.title = element_blank(),
-        axis.line = element_line(colour="black")) 
+        axis.line = element_line(linetype = 1, size = 0.5),
+        axis.ticks = element_line(linetype = 1, size = 0.5),
+        plot.title = element_text(size = 11, family = "sans", hjust = 0.5, face="bold"),
+        axis.text = element_text(size = 10, family = "sans")) 
 q1 + geom_text_repel() + geom_text() 
 
 #### Make a 2 panel plot to reduce complexity
@@ -221,19 +269,22 @@ p1<- ggplot()+
                      minor_breaks=seq(-20,20, 0.5))+
   scale_y_continuous(guide="prism_minor",
                      breaks = seq(-20,20,by=0.5),
-                     limits = c(-1,1),
+                     limits = c(-1.5,1.5),
                      expand = c(0,0),
                      minor_breaks=seq(-20,20, 0.25))+
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank(), 
-        legend.position = c(.25, 1),
+        legend.position = c(0.6, 1),
         legend.justification = c("right", "top"),
         legend.box.just = "right",
         legend.margin = margin(4,4,4,4),
         legend.title = element_blank(),
         legend.background = element_blank(),
-        axis.line = element_line(colour="black")) +
+        axis.line = element_line(linetype = 1, size = 0.5),
+        axis.ticks = element_line(linetype = 1, size = 0.5),
+        plot.title = element_text(size = 11, family = "sans", hjust = 0.5, face="bold"),
+        axis.text = element_text(size = 10, family = "sans")) +
   guides(color = guide_legend(ncol = 2))
 p1
 
@@ -257,17 +308,24 @@ p2<- ggplot()+
                      minor_breaks=seq(-20,20, 0.5))+
   scale_y_continuous(guide="prism_minor",
                      breaks = seq(-20,20,by=0.5),
-                     limits = c(-1,2),
+                     limits = c(-1.5,1.5),
                      expand = c(0,0),
                      minor_breaks=seq(-20,20, 0.25))+
-  theme(panel.grid.major = element_blank(),
+  theme(axis.line.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank(),
-        axis.line = element_line(colour="black"))
+        axis.line = element_line(colour="black", linetype = 1, size = 0.5),
+        axis.ticks = element_line(linetype = 1, size = 0.5),
+        plot.title = element_text(size = 11, family = "sans", hjust = 0.5, face="bold"),
+        axis.text = element_text(size = 10, family = "sans"))
 p2
 
 #Visualize NMDS
-ggarrange(p1, p2, ncol=1)                                          
+ggarrange(p1, p2, nrow=1)                                          
 
 # Saves NMDS
 pdf(file = "GeoB9512-5 NMDS.pdf", paper = "a4r", bg="transparent", height = 5, width = 30)
@@ -318,19 +376,19 @@ p3<- ggplot(data = data.scores, aes(x = NMDS1, y = NMDS2))+
   geom_vline(aes(xintercept=0), linetype="dashed", size=0.5, colour="black")+
   scale_x_continuous(guide="prism_minor",
                      breaks = seq(-20,20,by=1),
-                     limits = c(-2,2),
+                     limits = c(-1.5,1.5),
                      expand = c(0,0),
                      minor_breaks=seq(-20,20, 0.5))+
   scale_y_continuous(guide="prism_minor",
                      breaks = seq(-20,20,by=0.5),
-                     limits = c(-1,1),
+                     limits = c(-1.5,1.5),
                      expand = c(0,0),
                      minor_breaks=seq(-20,20, 0.25))+
   xlab("")+ylab("")+
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank(), 
-        legend.position = c(1,1),
+        legend.position = c(0.35,1),
         legend.justification = c("right", "top"),
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6),
@@ -339,179 +397,9 @@ p3<- ggplot(data = data.scores, aes(x = NMDS1, y = NMDS2))+
         axis.line = element_line(colour = "black"))
 p3
 
-ggarrange(p3, p2, ncol = 1)
 
-pdf(file = "NMDS9512_EnvFit.pdf", bg="transparent", height = 7, width = 7)
-ggarrange(p3, p2, ncol=1)
-dev.off()
-
-###################################
-## 8) Plot downcores Environmental variables
-ea1 <- read.csv("9512EA.csv", check.names = F)
-ea1 <- replace(ea1,is.na(ea1),0)                                                  #Replacing NA values by 0
-ea1 <- ea1[rowSums(ea1[,3:5])>0,]                                                 #Delete 0 rows
-
-#Stress Species %
-SSPlot <- ggplot(ea1, aes(`Stress Species[%]`,`Age [ka]`))+  
-  labs(title="Stress species") +
-  scale_y_reverse(guide="prism_minor",
-                  breaks = seq(50,0,by=-5),
-                  limits = c(27,0),
-                  expand = c(0,0),
-                  minor_breaks=seq(50, 0, -1))+
-  scale_x_continuous(guide="prism_minor",
-                     breaks = seq(0,100,by=20),
-                     limits = c(0,101),
-                     expand = c(0,0),
-                     minor_breaks=seq(0,100, 10))+
-  labs(title="Stress Species (%)") +
-  xlab("")+ 
-  ylab("")+
-  geom_areah()+
-  theme_minimal_vgrid()+
-  theme(panel.grid = element_blank(),
-        axis.ticks = element_line(colour = "black"),
-        axis.ticks.y = element_blank(), 
-        axis.line.y = element_blank(),
-        axis.text.y = element_blank())
-SSPlot
-
-#TROX Model
-Microhabitat <- data.frame(x2 = c(ea1$`Infaunals[%]`, ea1$`Epibenthic[%]`),  
-                           y2 = ea1$`Age [ka]`,     
-                           Morphogroups = c(rep("Infaunal", nrow(ea1)),
-                                            rep("Epifaunal", nrow(ea1))))
-
-MicrohabPlot <- ggplot(Microhabitat, aes(x2, y2)) +
-  geom_areah(aes(fill = Morphogroups)) +
-  scale_fill_grey(breaks = c('Infaunal', 'Epifaunal'))+
-  scale_y_reverse(guide="prism_minor",
-                  breaks = seq(50,0,by=-5),
-                  limits = c(27,0),
-                  expand = c(0,0),
-                  minor_breaks=seq(50, 0, -1))+
-  scale_x_continuous(guide="prism_minor",
-                     breaks = seq(0,100,by=20),
-                     limits = c(0,100),
-                     expand = c(0,0),
-                     minor_breaks=seq(0,100, 10))+
-  labs(title="Morphogroups (%)") +
-  xlab("")+ 
-  ylab("")+ 
-  geom_vline(xintercept = 33, linetype=2, size=0.5)+ 
-  geom_vline(xintercept = 66, linetype=2, size=0.5) +
-  theme_minimal_vgrid()+
-  theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.y = element_blank(), 
-        axis.line.y = element_blank(),
-        axis.text.y = element_blank())
-
-MicrohabPlot                                    #grey are infunals
-
-# Test type
-Test <- data.frame(x2 = c(ea1$`Calcareous[%]`, ea1$`Porcellaneous[%]`, ea1$`Agglutinated[%]`),  
-                   y2 = ea1$`Age [ka]`,     
-                   Test_Composition = c(rep("Calcareous", nrow(ea1)),
-                                        rep("Porcelaneous", nrow(ea1)), 
-                                        rep("Agglutinated", nrow(ea1)))) # Reshape data frame
-
-TestPlot <- ggplot(Test, aes(x2, y2)) +
-  geom_areah(aes(fill = Test_Composition)) +
-  scale_fill_grey(breaks = c('Calcareous', 'Porcelaneous', 'Agglutinated'))+
-  fill_palette(palette = "grey")+
-  scale_y_reverse(guide="prism_minor",
-                  breaks = seq(50,0,by=-5),
-                  limits = c(27,0),
-                  expand = c(0,0),
-                  minor_breaks=seq(50, 0, -1))+
-  scale_x_continuous(guide="prism_minor",
-                     breaks = seq(0,100,by=20),
-                     limits = c(0,100),
-                     expand = c(0,0),
-                     minor_breaks=seq(0,100, 10))+
-  labs(title="Test Composition (%)") +
-  xlab("%")+ 
-  ylab("")+ theme_bw()+ 
-  theme_minimal_vgrid()+
-  theme(legend.position = "none",
-        panel.grid = element_blank())
-TestPlot                                         #Black are porcelaneous, dark gray Calcareous
-
-### Oxic preference %
-Oxygen <- data.frame(x2 = c(ea1$`Oxic[%]`, ea1$`Suboxic[%]`, ea1$`Dysoxic[%]`),  
-                     y2 = ea1$`Age [ka]`,     
-                     OxygenGroup = c(rep("Oxic", nrow(ea1)),
-                                     rep("Suboxic", nrow(ea1)), 
-                                     rep("Dysoxic", nrow(ea1)))) # Reshape data frame
-
-OxygenPlot <- ggplot(Oxygen, aes(x2, y2)) +
-  geom_areah(aes(fill=OxygenGroup)) +
-  fill_palette(palette = "grey")+
-  scale_y_reverse(guide="prism_minor",
-                  breaks = seq(50,0,by=-5),
-                  limits = c(27,0),
-                  expand = c(0,0),
-                  minor_breaks=seq(50, 0, -1))+
-  scale_x_continuous(guide="prism_minor",
-                     breaks = seq(0,100,by=20),
-                     limits = c(0,101),
-                     expand = c(0,0),
-                     minor_breaks=seq(0,100, 10))+
-  labs(title="Oxygen Group(%)") +
-  xlab("")+ 
-  ylab("")+ theme_minimal_vgrid()+   
-  theme(legend.position = "none",
-        panel.grid = element_blank(),
-        axis.ticks.y = element_blank(), 
-        axis.line.y = element_blank(),
-        axis.text.y = element_blank())
-OxygenPlot                                    #Black are suboxic, dark gray oxic, light geay dysoxic
-
-## Dissolve Oxygen concentration from BFOI
-DOPlot2 <- ggplot(ea1, aes(`DO3[mL/L]`, `Age [ka]`))+      #Plots the enhanced BFOI
-  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax), 
-            data = LGM, alpha = 0.6, fill = "#c7c7c7", inherit.aes = FALSE)+
-  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax), 
-            data = HS1, alpha = 0.6, fill = "#c7c7c7",inherit.aes = FALSE)+
-  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax), 
-            data = HS2, alpha = 0.9, fill = "#c7c7c7",inherit.aes = FALSE)+
-  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax), 
-            data = YD, alpha = 0.6, fill = "#c7c7c7", inherit.aes = FALSE)+
-  geom_vline(xintercept = 0.1, linetype=2)+ 
-  geom_vline(xintercept = 0.3, linetype=2) +
-  geom_vline(xintercept = 1.5, linetype=2) +
-  geom_vline(xintercept = 2, linetype=2)+
-  scale_y_reverse(guide="prism_minor",
-                  breaks = seq(50,0,by=-5),
-                  limits = c(27,0),
-                  expand = c(0,0),
-                  minor_breaks=seq(50, 0, -1))+
-  scale_x_continuous(guide="prism_minor",
-                     breaks = seq(0,6,by=1),
-                     limits = c(0,6),
-                     expand = c(0,0),
-                     minor_breaks=seq(0,6, 0.5))+
-  geom_lineh()+
-  labs(title="Dissolved Oxygen Concentration [mL/L]") +
-  xlab("")+ 
-  ylab("")+  
-  theme_minimal_vgrid()+
-  theme(panel.grid = element_blank(),
-        axis.ticks = element_line(colour = "black"),
-        axis.ticks.y = element_blank(), 
-        axis.line.y = element_blank(),
-        axis.text.y = element_blank())
- 
-DOPlot2
-
-#Plot all together
-plot_grid(TestPlot, MicrohabPlot, SSPlot, 
-          OxygenPlot, DOPlot2, dPlot, nrow = 1)
-
-pdf(file = "GeoB9512-5 Oxyg.pdf", paper = "a4r", bg="transparent", height = 5, width = 30)
-plot_grid(SSPlot, OxygenPlot, DOPlot2, nrow = 1)
-dev.off()
+#Visualize NMDS - Figure 4
+ggarrange(p3, p2, nrow=1)     
 
 
 

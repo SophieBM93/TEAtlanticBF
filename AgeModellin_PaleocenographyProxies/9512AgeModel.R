@@ -965,12 +965,8 @@ ggarrange(dPlot2, BFDRPlot, BWOxPlot, TROXPlot,
           nrow = 1, widths = c(3,4,3,3))
 
 
-
-
-
-
 #####################################
-#Optional: Plots Global Variables
+# Part 3-Optional: Plots Global Variables
 # 1) Upload data (sources cited) 
 
 ##Global CO2 https://doi.pangaea.de/10.1594/PANGAEA.871265
@@ -981,8 +977,7 @@ GlobalCO2 <- read.csv(file="Kohler et al., 2017_CO2.csv", check.names = F,
 dGMST <- read.csv("gmst_Osmanetal.,2021.csv", check.names = F)
 dGMST$`Age min (kyrs BP)`<-dGMST$`Age min (kyrs BP)`/1000
 
-##Ph/Th from the Atlantic Ocean 
-#https://www.nature.com/articles/nature02494
+##Ph/Th from the Atlantic Ocean https://www.nature.com/articles/nature02494
 PhTh_A <- read.csv(file="PhTh_McManus.csv", check.names = F, header=TRUE, 
                    stringsAsFactors=FALSE,sep=",",na.strings="-")
 colnames(PhTh_A)<-c("Depth [cm]", "Age [kyrs]", "Pa/Th238", "Error238", "Pa/Th232","Error232")
