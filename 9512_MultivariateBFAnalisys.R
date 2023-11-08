@@ -52,15 +52,15 @@ ab1 <- read.csv("9512Sp.csv",
                 header = TRUE, row.names = 1, check.names = F)                     #Import data
 ab1 <- replace(ab1,is.na(ab1),0)                                                   #Replacing NA values by 0
 ab1<- ab1[rowSums(ab1[,2:148])>0,]                                                 #Delete 0 rows
-
+ab1 <- ab1[,2:148]
 ######################
 ##Intervals (from Age Model)
-YD <- tibble(ymin = 12.9, ymax =11.7, xmin = -Inf, xmax = Inf)
+YD <- tibble(ymin = 14.7, ymax =13.2, xmin = -Inf, xmax = Inf)
 # HS1A <- tibble(ymin = 17.9, ymax =15.7, xmin = -Inf, xmax = Inf)
 # HS1B <- tibble(ymin = 15.7, ymax =14.7, xmin = -Inf, xmax = Inf)
-HS1 <- tibble(ymin = 18.36, ymax =15.47, xmin = -Inf, xmax = Inf)
+HS1 <- tibble(ymin = 18.15, ymax =15.79, xmin = -Inf, xmax = Inf)
 HS2 <- tibble(ymin = 26.02, ymax =23.8, xmin = -Inf, xmax = Inf)
-LGM <- tibble(ymin = 23, ymax =19, xmin = -Inf, xmax = Inf)
+LGM <- tibble(ymin = 25.84, ymax =24.29, xmin = -Inf, xmax = Inf)
 # CRobert<- tibble(ymin = 11.739, ymax =15.307, xmin = -Inf, xmax = Inf)
 
 ##################### 
@@ -118,8 +118,10 @@ dPlot
 
 ###Relative abundaces % 
 ab1 <- read.csv("9512Gr2.CSV", check.names = F)
+row.names(ab1) <-ab1$`Age (kyrs)`
+ab1 <- ab1 [,2:82]
 ab1 <- replace(ab1,is.na(ab1),0)
-ab1 <- ab1[rowSums(ab1[,2:82])>0,]                          #Deletes 0 rows
+ab1 <- ab1[rowSums(ab1[,2:81])>0,]                          #Deletes 0 rows
 ab1P <- data.frame(ab1/rowSums(ab1)*100, check.names = F)   #Calculates %
 rowSums(ab1P)                                               #Checks calculus went ok
 
@@ -153,17 +155,19 @@ dev.off()
 
 #####################
 ##  7) Multivariate analyses: Compute NMDS
-ab1PF.Q <- (ab1PF*rowSums(ab1))/100                           #returns to BF counts
+ab1PF2 <- ab1PF
+ab1PF.Q <- (ab1PF2*rowSums(ab1))/100                           #returns to BF counts
+ 
 ab1PF.Q.Hel <-decostand(ab1PF.Q, method="hellinger")          #standarizes data
 
-nmds <- metaMDS(ab1PF.Q.Hel, distance = "bray", k=7, 
+nmds <- metaMDS(ab1PF.Q.Hel, distance = "bray", k=8, 
                 trymax=100000, autotransform = F)             #run NMDS
 stressplot(nmds)                                              #check Stress Plot
 
 # Import Environmental Data
 env.9512 <- read.csv("9512EA.csv", check.names = F)
 env.9512 <- replace(env.9512,is.na(env.9512),0)                                                  #Replacing NA values by 0
-env.9512<- env.9512[rowSums(env.9512[,3:13])>0,]                                                 #Delete 0 rows
+env.9512<- env.9512[rowSums(env.9512[,4:5])>0,]                                                 #Delete 0 rows
 
 # Plot the NMDS 
 fort <- fortify(nmds)
@@ -174,11 +178,11 @@ q1 <- ggplot()+
   geom_segment(data=subset(fort, score=='species'), 
                mapping=aes(x=0, y=0, xend=NMDS1, yend=NMDS2),
                arrow = arrow(length =unit(0.015, "npc"), type="closed"), 
-               colour="darkgray", size=0.5)+
+               colour="darkgray", linewidth=0.5)+
   geom_text(data=subset(fort, score=='species'), 
             mapping = aes(label=label, x=NMDS1*1.1, y=NMDS2*1.1))+
-  geom_abline(intercept = 0, slope=0, linetype="dashed", size=0.5, colour="black")+
-  geom_vline(aes(xintercept=0), linetype="dashed", size=0.5, colour="black")+
+  geom_abline(intercept = 0, slope=0, linetype="dashed", linewidth=0.5, colour="black")+
+  geom_vline(aes(xintercept=0), linetype="dashed", linewidth=0.5, colour="black")+
   scale_x_continuous(guide="prism_minor",
                      breaks = seq(-20,20,by=1),
                      limits = c(-1.5,1.5),
@@ -253,7 +257,7 @@ p2<- ggplot()+
                      minor_breaks=seq(-20,20, 0.5))+
   scale_y_continuous(guide="prism_minor",
                      breaks = seq(-20,20,by=0.5),
-                     limits = c(-1,1),
+                     limits = c(-1,2),
                      expand = c(0,0),
                      minor_breaks=seq(-20,20, 0.25))+
   theme(panel.grid.major = element_blank(),
@@ -275,16 +279,15 @@ env2 <- env.9512
 
 #Extract the varibales of interest
 envNMDS <- cbind(env2$`Age [ka]`, env2$`DO3[mL/L]`, env2$`Infaunals[%]`,
-                      env2$`Epibenthic[%]`, env2$`Calcareous[%]`, env2$`Porcellaneous[%]`,
-                      env2$`d13C (corrected) [o/oo]`, env2$`dw [permil]`)
+                      env2$`Epibenthic[%]`, env2$`Calcareous[%]`, env2$`Porcellaneous[%]`)
 envNMDS <- as.data.frame(envNMDS)
 colnames(envNMDS)<- c("Age (ka)", "BWOx[mL/L]", "Infaunals [%]",
                       "Epifaunals [%]", "Calcareous [%]", 
-                      "Porcellaneous [%]","d13C", "d18Osw") 
+                      "Porcellaneous [%]") 
 str(envNMDS)
 
 #Plot variables in the NMDS
-env <- envNMDS[2:8]
+env <- envNMDS[2:6]
 en = envfit(nmds, env, permutations = 999, na.rm = TRUE)                 #Do the environmnetal fit
 
 data.scores = as.data.frame(scores(nmds, display="species"))                                 
