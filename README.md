@@ -31,7 +31,7 @@ Global Mean Seasurface Temprature (GMST) https://www.nature.com/articles/s41586-
 All necessary files are provided in the folders
 Any inquiries can be directed to the corresponding author
 
-**References **
+## References
 
 - Barragán-Montilla, S. (dataset in review b). Benthic Foraminifera counts off NW Africa during the last deglaciation. PANGAEA, https://doi.pangaea.de/10.1594/PANGAEA.962951
 - Barragán-Montilla, S. (dataset in review c). Benthic foraminifera stable isotopes (d18O and d13C) of sediment core GeoB9512-5. PANGAEA, https://doi.pangaea.de/10.1594/PANGAEA.962968
