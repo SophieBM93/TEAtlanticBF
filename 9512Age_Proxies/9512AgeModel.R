@@ -959,11 +959,9 @@ dPlot2 <- ggplot(ea1, aes(`Fisher Alpha Index`, `Age [ka]`))+
         axis.text = element_text(size = 10, family = "sans"))
 dPlot2
 
-
 #Figure 3
 ggarrange(dPlot2, BFDRPlot, BWOxPlot, TROXPlot,
           nrow = 1, widths = c(3,4,3,3))
-
 
 #####################################
 # Part 3-Optional: Plots Global Variables
@@ -1105,10 +1103,6 @@ gmst1 <- ggplot(dGMST, aes(`50th`, `Age min (kyrs BP)`))+
         axis.text.x = element_text(size = 10, family = "sans"))
 gmst1
 
-GlobalVarib <- plot_grid(d18Oplotsw2,dfBWTplot,GlobalCO2Plot, dfd13Cplot, PhThPlot, gmst1, align="hv",
+GlobalVarib <- plot_grid(d18Oplotsw, GlobalCO2Plot, d13Cplot, PhThPlot, gmst1, align="hv",
                           nrow = 1, hjust = 0, vjust = 0)
 GlobalVarib
-
-pdf(file = "Global.pdf", paper = "a4r", bg="transparent", width = 10, height = 5)
-GlobalVarib
-dev.off()
