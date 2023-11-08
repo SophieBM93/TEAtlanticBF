@@ -1,9 +1,8 @@
 # Tropical-eastern-Atlantic-Benthic-Foraminifera-analyses
 These scripts were used to process the benthic foraminifera (BF) data GeoB9512-5 of the tropical eastern Atlantic (TE Atlantic).
-
 This folder contains 2 codes, as a supplement to the publication xxxx:
 
-**-Folder 9512Diversity_NMDS**
+# Folder 9512Diversity_NMDS
 
 _1. Code 9512_MultivariateBFAnalisys.R_
 To run and visualize the NMDS of benthic foraminifera from the last deglaciation identified onsite GeoB9512-5
@@ -12,18 +11,18 @@ To run and visualize the NMDS of benthic foraminifera from the last deglaciation
 9512Gr2.csv as reported in the Supplementary Information
 9512EA.csv adapted for this code using the Supplementary Information 3 y 4
 
-**-Folder 9512Age_Proxies**
+# Folder 9512Age_Proxies
 
 _2. Code 9512AgeModel.R was written in 3 parts._
 
-# First Part: lines 9 - 290 to model ages based on the radiocarbon data published here https://doi.org/10.1594/PANGAEA.962899 
+**First Part:** lines 9 - 290 to model ages based on the radiocarbon data published here https://doi.org/10.1594/PANGAEA.962899 
 and estimate median ages of the benthic foraminifera geochemistry data points reported here https://doi.org/10.1594/PANGAEA.962968 
 with the corresponding uncertainties calculated for this study
 
-# Second part: from lines 291 - 965, to visualize the results presented in the publication
+**Second part:** from lines 291 - 965, to visualize the results presented in the publication
 9512_EA.csv file adapted for this code using Supplementary Information 3 y 4
 
-# A third optional (lines 968 - 1,115 ) part that includes global variables compiled by different authors, including:
+**A third optional** (lines 968 - 1,115 ) part that includes global variables compiled by different authors, including:
 
 Atlantic Ph/Th Line 964 https://www.nature.com/articles/nature02494 and https://www.nature.com/articles/nature14059
 Global CO2 https://doi.pangaea.de/10.1594/PANGAEA.871265 line 1047
