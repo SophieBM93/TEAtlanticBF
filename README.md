@@ -7,9 +7,9 @@ This folder contains 2 codes, as a supplement to the publication xxxx:
 _1. Code 9512_MultivariateBFAnalisys.R_
 To run and visualize the NMDS of benthic foraminifera from the last deglaciation identified onsite GeoB9512-5
 
-9512Sp data comes from Barragán-Montilla, S. (dataset in review b). Benthic Foraminifera counts off NW Africa during the last deglaciation. PANGAEA, https://doi.pangaea.de/10.1594/PANGAEA.962951
-9512Gr2.csv as reported in the Supplementary Information
-9512EA.csv adapted for this code using the Supplementary Information 3 y 4
+- 9512Sp data comes from Barragán-Montilla, S. (dataset in review b). Benthic Foraminifera counts off NW Africa during the last deglaciation. PANGAEA, https://doi.pangaea.de/10.1594/PANGAEA.962951
+- 9512Gr2.csv as reported in the Supplementary Information
+- 9512EA.csv adapted for this code using the Supplementary Information 3 y 4
 
 # Folder 9512Age_Proxies
 
