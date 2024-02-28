@@ -35,8 +35,8 @@ library(datasets)
 
 ########################################################
 # 4) Set core limits
-d.min=2.5      #Minimum depth
-d.max=547.5    #Maximum depth
+# d.min=2.5      #Minimum depth
+# d.max=547.5    #Maximum depth
 nmc=10000      #Number of iterations (age models and time series to generate)
 
 ########################################################
@@ -283,7 +283,7 @@ XRFneff<-dim(XRFMCAG)[1] # Determine number of columns
 XRFchron.dat<-t(XRFMCAG)[,(XRFneff-nmc+1):XRFneff] # Tailor to desired number of iterations (nmc)
 XRFchron.median<-apply(XRFchron.dat,1,median) # Calculate median age
 
-XRF_Age<-data.frame(cbind(XRFchron.median/1000,XRF)) # Merge fields
+XRF_Age<-data.frame(cbind((XRFchron.median/1000),XRF)) # Merge fields
 colnames(XRF_Age)<-c("Median Age [kyrs]","Depth (cm)", "Ti/Ca", 
                      "Fe/Ca", "Fe/K", "Mn", "Total Counts")
 write.csv(XRF_Age,file=sprintf("OPGeoB9512-5_XRF_Age.csv"), row.names=FALSE)
@@ -339,9 +339,9 @@ Globald18O <- read.csv(file="GlobalD18O.csv", check.names = F, header=TRUE,
 ########################################################
 # 2) Define Key Climatic Periods (As reported in the Manuscript)
 
-YD <- tibble(ymin = 14.7, ymax =13.2, xmin = -Inf, xmax = Inf)
-HS1 <- tibble(ymin = 18.2, ymax =15.8, xmin = -Inf, xmax = Inf)
-HS2 <- tibble(ymin = 25.84, ymax =24.29, xmin = -Inf, xmax = Inf)
+YD <- tibble(ymin = 11.7, ymax =12.9, xmin = -Inf, xmax = Inf)
+HS1 <- tibble(ymin = 18.5, ymax =14.79, xmin = -Inf, xmax = Inf)
+HS2 <- tibble(ymin = 26.12, ymax =23.73, xmin = -Inf, xmax = Inf)
 LGM <- tibble(ymin = 23, ymax =19, xmin = -Inf, xmax = Inf)
 
 ########################################################
@@ -421,6 +421,16 @@ d18Oplotraw
 
 ## d18Osw
 d18Oplotsw <- ggplot(dfdw, aes(`dw [permil]`, `Median Age [kyrs]`))+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = LGM, alpha = 0.6, fill = "#c7c7c7", inherit.aes = FALSE)+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = HS1, alpha = 0.4, fill = "#A6B578",inherit.aes = FALSE)+
+  geom_hline(yintercept = 16.79, linetype=2, linewidth=0.5, alpha=0.5)+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = HS2, alpha = 0.4, fill = "#A6B578",inherit.aes = FALSE)+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = YD, alpha = 0.6, fill = "#c7c7c7", inherit.aes = FALSE)+
+  geom_hline(yintercept = 6.61, linetype = 2, linewidth = 0.5, alpha=0.5)+
   geom_vline(xintercept = 0.54, linetype = 2, linewidth = 0.5, alpha=0.5)+
   geom_ribbon(dfdw, mapping=aes(xmin = `Q0.16`, xmax = `Q0.84`, y=`Median Age [kyrs]`),
               inherit.aes = F, fill = "#7d9ec2", alpha=0.3)+ 
@@ -444,11 +454,7 @@ d18Oplotsw <- ggplot(dfdw, aes(`dw [permil]`, `Median Age [kyrs]`))+
   xlab("")+
   ylab("Age (kyrs BP)")+
   theme_classic()+
-  theme(axis.line.y =element_blank(), 
-        axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank(),
-        axis.line.x = element_line(linetype = 1, size = 0.5),
+  theme(axis.line.x = element_line(linetype = 1, size = 0.5),
         axis.ticks.x = element_line(linetype = 1, size = 0.5),
         plot.title = element_text(size = 11, family = "sans", hjust = 0.5, face="bold"),
         axis.text.x = element_text(size = 10, family = "sans"))
@@ -690,6 +696,9 @@ CibSpPlot <- ggplot(ea1, aes(`Cibicidoides spp.`, `Age [ka]`))+
         axis.text.x = element_text(size = 10, family = "sans"))
 CibSpPlot
 
+d13C_9508 <- read.csv("GeoB9508-5_Cib13CQts.csv", check.names = F)
+d13C_9506 <- read.csv("GeoB9506-1_Cib13CQts_CW.csv", check.names = F)
+
 d13Cplot2 <- ggplot(dfd13C, aes(`Mean d13C [o/oo]` , `Median Age [kyrs]`))+
   geom_hline(yintercept = 6.6, linetype = 2, linewidth = 0.5, alpha=0.5)+
   geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
@@ -707,14 +716,15 @@ d13Cplot2 <- ggplot(dfd13C, aes(`Mean d13C [o/oo]` , `Median Age [kyrs]`))+
              colour="#A6B578", linetype = 2, size = 0.25)+
   geom_point(dfd13C, mapping=aes(`Mean d13C [o/oo]` , `Median Age [kyrs]`), 
              colour="#A6B578", size = 1, alpha = 0.5)+
-  geom_ribbon(NW_Atl, mapping=aes(xmin = `Q0.16`, xmax = `Q0.84`), fill = "#993399", alpha=0.3)+
-  geom_lineh(NW_Atl, mapping=aes(`Mean d13C [o/oo]` , `Median Age [kyrs]`), 
+  geom_ribbon(d13C_9506, mapping=aes(xmin = `Q0.16`, xmax = `Q0.84`), fill = "#993399", alpha=0.3)+
+  geom_lineh(d13C_9506, mapping=aes(`Mean d13C [o/oo]` , `Median Age [kyrs]`), 
              colour="#993399", linetype = 2, size = 0.25)+
-  geom_point(NW_Atl, mapping=aes(`Mean d13C [o/oo]` , `Median Age [kyrs]`), 
+  geom_point(d13C_9506, mapping=aes(`Mean d13C [o/oo]` , `Median Age [kyrs]`), 
              colour="#993399", size = 1, alpha = 0.5)+
-  geom_lineh(ea1, mapping=aes(`Dd13C (9512-29JPC)` , `Average Age [kyrs] Dd13C`),
+  geom_ribbon(d13C_9508, mapping=aes(xmin = `Q0.16`, xmax = `Q0.84`), fill = "black", alpha=0.3)+
+  geom_lineh(d13C_9508, mapping=aes(`Mean d13C [o/oo]` , `Median Age [kyrs]`),
              colour="black", linetype = 2, size = 0.25)+
-  geom_point(ea1, mapping=aes(`Dd13C (9512-29JPC)` , `Average Age [kyrs] Dd13C`),
+  geom_point(d13C_9508, mapping=aes(`Mean d13C [o/oo]` , `Median Age [kyrs]`),
              colour="black", size = 1, alpha = 0.5)+
   scale_y_reverse(guide="prism_minor",
                   breaks = seq(50,0,by=-5),
@@ -891,8 +901,7 @@ FeCaPlot <- ggplot(XRF_Age, aes(`Fe/Ca`, `Median Age [kyrs]`)) +
 FeCaPlot
 
 #Figure 3
-ggarrange(CibSpPlot, d13Cplot2, BWOxPlot, TROXPlot, 
-          dPlot, MnPlot, TiCaPlot, FeCaPlot,
+ggarrange(CibSpPlot, BWOxPlot, TROXPlot, dPlot, 
           nrow = 1, widths = c(4,6,4,4,4,3,3,3))
 
 
@@ -1000,21 +1009,21 @@ PhThPlot <- ggplot()+
             data = HS2, alpha = 0.4, fill = "#A6B578",inherit.aes = FALSE)+
   geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
             data = YD, alpha = 0.6, fill = "#c7c7c7", inherit.aes = FALSE)+
-  geom_lineh(PhTh_A, mapping=aes(`Pa/Th238`, `Age [kyrs]`),
-             colour="#9999CC", linetype = 1, size = 0.25)+
-  geom_errorbar(PhTh_A,mapping=aes(y= `Age [kyrs]`,xmin = `Pa/Th238` - Error238,
-                                   xmax = `Pa/Th238` + Error238),
-                colour= "#9999CC", linetype = 1, width = 0.5)+
-  geom_lineh(PhTh_A, mapping=aes(`Pa/Th232`, `Age [kyrs]`),
-             colour="#66CC99", linetype = 1, size = 0.25)+
-  geom_errorbar(PhTh_A,mapping=aes(y= `Age [kyrs]`,xmin = `Pa/Th232` - Error232,
-                                   xmax = `Pa/Th232` + Error232),
-                colour= "#66CC99", linetype = 1, width = 0.5)+
   geom_lineh(PhTh_C, mapping=aes(`231Pa/230Th`, `Age [kyrs]`),
              colour="#CC6666", linetype = 1, size = 0.25)+
   geom_errorbar(PhTh_C,mapping=aes(y= `Age [kyrs]`,xmin = `231Pa/230Th` - `2SD`,
                                    xmax = `231Pa/230Th` + `2SD`),
                 colour="#CC6666", linetype = 1, width = 0.1, size=0.1)+
+  geom_errorbar(PhTh_A,mapping=aes(y= `Age [kyrs]`,xmin = `Pa/Th232` - Error232,
+                                   xmax = `Pa/Th232` + Error232),
+                colour= "#66CC99", linetype = 1, width = 0.5)+
+  geom_lineh(PhTh_A, mapping=aes(`Pa/Th232`, `Age [kyrs]`),
+             colour="forestgreen", linetype = 1, size = 0.25)+
+  geom_errorbar(PhTh_A,mapping=aes(y= `Age [kyrs]`,xmin = `Pa/Th238` - Error238,
+                                   xmax = `Pa/Th238` + Error238),
+                colour= "darkgray", linetype = 1, width = 0.5)+
+  geom_lineh(PhTh_A, mapping=aes(`Pa/Th238`, `Age [kyrs]`),
+             colour="black", linetype = 1, size = 0.25)+
   scale_y_reverse(guide="prism_minor",
                   breaks = seq(180,0,by=-5),
                   limits = c(27,0),
@@ -1044,9 +1053,9 @@ ggarrange(d18Oplotraw, d18Oplotsw, d13Cplot, PhThPlot, nrow = 1)
 #Global CO2
 GlobalCO2Plot <- ggplot()+
   geom_lineh(GlobalCO2, mapping= aes(`CO2 [mmol/mol]`, `Age [ka BP]`), 
-             colour="#B08267", linetype = 1, size = 0.4)+
+             colour="brown", linetype = 1, size = 0.4)+
   geom_point(GlobalCO2, mapping= aes(`CO2 std dev [±]`, `Age [ka BP]`), 
-             colour="#B08267", size = 0.4)+
+             colour="#B08267", size = 0.5)+
   scale_y_reverse(guide="prism_minor",
                   breaks = seq(50,0,by=-5),
                   limits = c(27,0),
@@ -1072,15 +1081,14 @@ GlobalCO2Plot <- ggplot()+
 GlobalCO2Plot
 
 
-#Define colors and plot Global Mean Seasurface Temprature (GMST)
-my_colors <- RColorBrewer::brewer.pal(6, "Blues_Pastel")[2:6]
+#Plot Global Mean Seasurface Temprature (GMST)
 gmst1 <- ggplot(dGMST, aes(`50th`, `Age min (kyrs BP)`))+
-  geom_ribbon(dGMST,mapping=aes(xmin=`5th`, xmax=`95th`), fill = "#6A75BA", alpha=0.7)+
-  geom_ribbon(dGMST,mapping=aes(xmin=`10th`, xmax=`90th`), fill = "#7A86CC", alpha=0.7)+
-  geom_ribbon(dGMST,mapping=aes(xmin=`20th`, xmax=`80th`), fill = "#929CDE", alpha=0.7)+
-  geom_ribbon(dGMST,mapping=aes(xmin=`30th`, xmax=`70th`), fill = "#B4BBFA", alpha=0.7)+
-  geom_ribbon(dGMST,mapping=aes(xmin=`40th`, xmax=`60th`), fill = "#D3EEFF", alpha=0.7)+
-  geom_lineh(linetype=2, size=0.5, colour="#7B60BD")+
+  geom_ribbon(dGMST,mapping=aes(xmin=`5th`, xmax=`95th`), fill = "#56292B", alpha=0.7)+
+  geom_ribbon(dGMST,mapping=aes(xmin=`10th`, xmax=`90th`), fill = "#704041", alpha=0.7)+
+  geom_ribbon(dGMST,mapping=aes(xmin=`20th`, xmax=`80th`), fill = "#8B5858", alpha=0.7)+
+  geom_ribbon(dGMST,mapping=aes(xmin=`30th`, xmax=`70th`), fill = "#A67170", alpha=0.7)+
+  geom_ribbon(dGMST,mapping=aes(xmin=`40th`, xmax=`60th`), fill = "#DEA5A4", alpha=0.7)+
+  geom_lineh(linetype=2, size=0.5, colour="#3E1416")+
   scale_y_reverse(guide="prism_minor",
                   breaks = seq(50,0,by=-5),
                   limits = c(27,0),
@@ -1106,3 +1114,165 @@ gmst1
 GlobalVarib <- plot_grid(d18Oplotsw, GlobalCO2Plot, d13Cplot, PhThPlot, gmst1, align="hv",
                           nrow = 1, hjust = 0, vjust = 0)
 GlobalVarib
+
+dfBWT_Mel_2 <- read.csv("GeoB9512-5_BWTMelonis(Krist).csv", check.names = F)
+dfBWT_Mel_OxCorr <- read.csv("GeoB9512-5_BWTMelonis(Barr_OxCorr).csv", check.names = F)
+dfBWT_9508 <- read.csv("GeoB9508-5_BWT.csv", check.names = F)
+dfBWT_9506Mel_OxCorr <- read.csv("GeoB9506-5_BWT_Mel_BarrOxyg.csv", check.names = F)
+dfBWT_9506Kr<- read.csv("GeoB9506-5_BWT_Mel_Kr.csv", check.names = F)
+dfBWT_9506BWT <- read.csv("GeoB9506-5_BWT.csv", check.names = F)
+
+dfBWTplot<- ggplot(dfBWT, aes(`BWT [deg C]`, `Median Age [kyrs]`))+
+  geom_vline(xintercept = 7.1, linetype = 2, size = 0.5, alpha=0.5)+
+  geom_ribbon(dfBWT, mapping = aes(xmin = `Q0.16`, xmax = `Q0.84`), 
+              fill = "black", alpha=0.2)+ 
+  geom_lineh(dfBWT, mapping = aes(`BWT [deg C]`, `Median Age [kyrs]`), 
+             color="black", linetype = 2, size = 0.25)+
+  geom_point(dfBWT, mapping = aes(`BWT [deg C]`, `Median Age [kyrs]`), 
+             color="black", size = 1, alpha = 0.5)+
+  geom_ribbon(dfBWT_Mel_2, mapping=aes(xmin = `Q0.16`, xmax = `Q0.84`),
+              fill = "#629CFF", alpha=0.2)+
+  geom_lineh(dfBWT_Mel_2, mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="blue", linetype = 2, size = 0.25)+
+  geom_point(dfBWT_Mel_2, mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="blue", size = 1, alpha = 0.5)+
+  geom_ribbon(dfBWT_Mel_OxCorr, mapping=aes(xmin = `Q0.16`, xmax = `Q0.84`),
+              fill = "#A6B578", alpha=0.2)+
+  geom_lineh(dfBWT_Mel_OxCorr, mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="darkgreen", linetype = 2, size = 0.25)+
+  geom_point(dfBWT_Mel_OxCorr, mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="darkgreen", size=1, alpha=0.5)+
+  geom_ribbon(dfBWT_9508 , mapping=aes(xmin = `Q0.16`, xmax = `Q0.84`),
+              fill = "#993399", alpha=0.2)+
+  geom_lineh(dfBWT_9508 , mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="#993399", linetype = 2, size = 0.25)+
+  geom_point(dfBWT_9508 , mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="#993399", size = 1, alpha = 0.5)+
+  
+  scale_y_reverse(guide="prism_minor",
+                  breaks = seq(50,0,by=-5),
+                  limits = c(27,0),
+                  expand = c(0,0),
+                  minor_breaks=seq(50, 0, -1))+
+  scale_x_continuous(guide="prism_minor",
+                     breaks = seq(-2,40,by=2),
+                     limits = c(-2,16),
+                     expand = c(0,0),
+                     minor_breaks=seq(-2,40, 0.5))+
+  labs(title="Bottom water temperatures [?C]")+
+  xlab("")+ 
+  ylab("")+
+  theme_classic()+
+  theme(axis.line.y =element_blank(), 
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line.x = element_line(linetype = 1, size = 0.5),
+        axis.ticks.x = element_line(linetype = 1, size = 0.5),
+        plot.title = element_text(size = 11, family = "sans", hjust = 0.5, face="bold"),
+        plot.subtitle = element_text(size = 9, family = "sans", hjust = 0.5),
+        axis.text.x = element_text(size = 10, family = "sans"))+
+  theme(legend.position = "none" , legend.title = element_blank())
+dfBWTplot
+
+plot_grid(d18Oplotsw, GlobalCO2Plot, BWOxPlot, dfBWTplot,PhThPlot, gmst1, align="hv",
+          nrow = 1, hjust = 0, vjust = 0)
+
+
+###BWT-Deep Ocean
+dfBWTplot2<- ggplot(dfBWT, aes(`BWT [deg C]`, `Median Age [kyrs]`))+
+  geom_vline(xintercept = 7.1, linetype = 2, size = 0.5, alpha=0.5)+
+  geom_ribbon(dfBWT_9506BWT, mapping = aes(xmin = `Q0.16`, xmax = `Q0.84`), 
+              fill = "black", alpha=0.2)+ 
+  geom_lineh(dfBWT_9506BWT, mapping = aes(`BWT [deg C]`, `Median Age [kyrs]`), 
+             color="black", linetype = 2, size = 0.25)+
+  geom_point(dfBWT_9506BWT, mapping = aes(`BWT [deg C]`, `Median Age [kyrs]`), 
+             color="black", size = 1, alpha = 0.5)+
+  geom_ribbon(dfBWT_Mel_OxCorr, mapping=aes(xmin = `Q0.16`, xmax = `Q0.84`),
+              fill = "#629CFF", alpha=0.2)+
+  geom_lineh(dfBWT_Mel_OxCorr, mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="blue", linetype = 2, size = 0.25)+
+  geom_point(dfBWT_Mel_OxCorr, mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="blue", size = 1, alpha = 0.5)+
+  geom_ribbon(dfBWT, mapping=aes(xmin = `Q0.16`, xmax = `Q0.84`),
+              fill = "#A6B578", alpha=0.2)+
+  geom_lineh(dfBWT, mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="darkgreen", linetype = 2, size = 0.25)+
+  geom_point(dfBWT, mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="darkgreen", size=1, alpha=0.5)+
+  geom_ribbon(dfBWT_9508 , mapping=aes(xmin = `Q0.16`, xmax = `Q0.84`),
+              fill = "#993399", alpha=0.2)+
+  geom_lineh(dfBWT_9508 , mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="#993399", linetype = 2, size = 0.25)+
+  geom_point(dfBWT_9508 , mapping=aes(`BWT [deg C]`, `Median Age [kyrs]`),
+             color="#993399", size = 1, alpha = 0.5)+
+  
+  scale_y_reverse(guide="prism_minor",
+                  breaks = seq(50,0,by=-5),
+                  limits = c(27,0),
+                  expand = c(0,0),
+                  minor_breaks=seq(50, 0, -1))+
+  scale_x_continuous(guide="prism_minor",
+                     breaks = seq(-2,40,by=2),
+                     limits = c(-2,16),
+                     expand = c(0,0),
+                     minor_breaks=seq(-2,40, 0.5))+
+  labs(title="Bottom water temperatures [?C]")+
+  xlab("")+ 
+  ylab("")+
+  theme_classic()+
+  theme(axis.line.y =element_blank(), 
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.line.x = element_line(linetype = 1, size = 0.5),
+        axis.ticks.x = element_line(linetype = 1, size = 0.5),
+        plot.title = element_text(size = 11, family = "sans", hjust = 0.5, face="bold"),
+        plot.subtitle = element_text(size = 9, family = "sans", hjust = 0.5),
+        axis.text.x = element_text(size = 10, family = "sans"))+
+  theme(legend.position = "none" , legend.title = element_blank())
+dfBWTplot2
+
+NGRIP <- read.csv("NGRIP_d18O.csv", check.names = F)
+NGRIP$`Age [yr BP]` <- NGRIP$`Age [yr BP]`/1000
+
+# 2) Define Key Climatic Periods (As reported in Landais et al., 2018 https://doi.org/10.5194/cp-14-1405-2018)
+
+YDB <- tibble(ymin = 11.7, ymax =12.9, xmin = -Inf, xmax = Inf)
+HS1B <- tibble(ymin = 17.5, ymax =14.7, xmin = -Inf, xmax = Inf)
+
+########################################################
+# 3) Plot Elemental ratios (uncalibrated) with the new age model to confirm HS2, HS1 and YD
+
+NGRIP_Plot<- ggplot(NGRIP, aes(`NGRIP d18O [o/oo]`, `Age [yr BP]`))+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = HS1B, alpha = 0.4, fill = "#A6B578",inherit.aes = FALSE)+
+  geom_hline(yintercept = 16.1, linetype=2, linewidth=0.5, alpha=0.5)+
+  geom_rect(mapping = aes(ymin = ymin, ymax = ymax, xmin = xmin, xmax = xmax),
+            data = YDB, alpha = 0.6, fill = "#c7c7c7", inherit.aes = FALSE)+
+  geom_lineh(NGRIP, mapping=aes(`NGRIP d18O [o/oo]`, `Age [yr BP]`),
+             color="blue", linetype = 1, size = 0.25)+
+  scale_y_reverse(guide="prism_minor",
+                  breaks = seq(50,0,by=-5),
+                  limits = c(27,0),
+                  expand = c(0,0),
+                  minor_breaks=seq(50, 0, -1))+
+  # scale_x_continuous(guide="prism_minor",
+  #                    breaks = seq(-2,40,by=2),
+  #                    limits = c(-2,16),
+  #                    expand = c(0,0),
+  #                    minor_breaks=seq(-2,40, 0.5))+
+  labs(title="NGRIP")+
+  xlab("")+ 
+  ylab("")+
+  theme_classic()+
+  theme(axis.line.x = element_line(linetype = 1, size = 0.5),
+        axis.ticks.x = element_line(linetype = 1, size = 0.5),
+        plot.title = element_text(size = 11, family = "sans", hjust = 0.5, face="bold"),
+        plot.subtitle = element_text(size = 9, family = "sans", hjust = 0.5),
+        axis.text.x = element_text(size = 10, family = "sans"))
+NGRIP_Plot
+
+plot_grid(NGRIP_Plot, d18Oplotsw,TROXPlot, BWOxPlot, dfBWTplot2,PhThPlot, gmst1, align="hv",
+          nrow = 1, hjust = 0, vjust = 0)
+
