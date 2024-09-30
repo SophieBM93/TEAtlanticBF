@@ -1,30 +1,30 @@
-Tropical-eastern-Atlantic-Benthic-Foraminifera-analyses
+Tropical-eastern-Atlantic-Benthic-Foraminifera-analyses (Updated September 30, 2024)
 These scripts were used to process the benthic foraminifera (BF) data GeoB9512-5 of the tropical eastern Atlantic (TE Atlantic). This folder contains 2 codes to reproduce the results of the cited research. Folder 9512Age_PaleoOx contains the code and data to reproduce paleo-oxygenation results:
 
-Folder 9512Age_PaleoOx (For Manuscript xxx)
+Folder 9512Age_PaleoOx (For Manuscript (https://www.researchsquare.com/article/rs-4083170/v1))
 2. Code 9512AgeModel.R was written in 3 parts.
 
-First Part: lines 16 - 154 to model ages based on the radiocarbon data 
+First Part: lines 16 - 142 to model ages based on the radiocarbon data 
 published here https://doi.org/10.1594/PANGAEA.962899 
 and to estimate the median ages of the dissolved oxygen concentration calculated 
 from the Enhanced Benthic Foraminifera Oxygen Index; and the proxy uncertainties 
 
-Second part: from lines 156 - 889, to visualize the results presented in the publication 
+Second part: from lines 144 - 549, to visualize the results presented in the publication 
 the 9512_EA.csv file was adapted for this code using Supplementary Information 2 and 3
 
 This includes the global variables compiled and plotted in Figures 2 and 3:
 
-Line 196: Figure 2
-Line 434: Figure 3
-Line 725: Figure 6
+Line 209: XRF Figure 3
+Line 241: Figure 2
+Line 427: Figure 5
 
 All necessary files are provided in the folder. Any inquiries can be directed to the corresponding author.
 
 References
 Bard, E., Rostek, F., Turon, J.-L. & Gendreau, S. Hydrological Impact of Heinrich Events in the Subtropical Northeast Atlantic. Science 289, 1321–1324 (2000).
 Bard, Edouard; Rostek, Frauke; Turon, Jean-Louis; Gendreau, S (2000): Age, alkenone content and sea surface temperature records of sediment core SU81-18. PANGAEA, https://doi.org/10.1594/PANGAEA.441524
-Barragán-Montilla, S. (dataset in review b). Benthic Foraminifera counts off NW Africa during the last deglaciation. PANGAEA, https://doi.pangaea.de/10.1594/PANGAEA.962951
-Barragán-Montilla, S. (dataset in review c). Benthic foraminifera stable isotopes (d18O and d13C) of sediment core GeoB9512-5. PANGAEA, https://doi.pangaea.de/10.1594/PANGAEA.962968
+Barragán-Montilla, S. (dataset in review). Benthic Foraminifera counts off NW Africa during the last deglaciation. PANGAEA, https://doi.pangaea.de/10.1594/PANGAEA.962951
+Barragán-Montilla, Sofía; Mulitza, Stefan: Radiocarbon ages of sediment core GeoB9512-1 [dataset]. PANGAEA, https://doi.pangaea.de/10.1594/PANGAEA.962899 (dataset in review)
 Blaauw, M. & Christen, J. A. Flexible paleoclimate age-depth models using an autoregressive gamma process. Bayesian Anal. 6, 457–474 (2011).
 Böhm, E. et al. Strong and deep Atlantic meridional overturning circulation during the last glacial cycle. Nature 517, 73–76 (2015).
 Heaton, T. J. et al. Marine20—The Marine Radiocarbon Age Calibration Curve (0–55,000 cal BP). Radiocarbon 62, 779–820 (2020).
