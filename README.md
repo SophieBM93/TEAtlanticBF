@@ -2,7 +2,7 @@ Tropical-eastern-Atlantic-Benthic-Foraminifera-analyses (Updated September 30, 2
 These scripts were used to process the benthic foraminifera (BF) data GeoB9512-5 of the tropical eastern Atlantic (TE Atlantic). This folder contains 2 codes to reproduce the results of the cited research. Folder 9512Age_PaleoOx contains the code and data to reproduce paleo-oxygenation results:
 
 Folder 9512Age_PaleoOx (For Manuscript (https://www.researchsquare.com/article/rs-4083170/v1))
-2. Code 9512AgeModel.R was written in 3 parts.
+2. Code 9512AgeModel.R was written in 3 parts. 
 
 First Part: lines 16 - 142 to model ages based on the radiocarbon data 
 published here https://doi.org/10.1594/PANGAEA.962899 
